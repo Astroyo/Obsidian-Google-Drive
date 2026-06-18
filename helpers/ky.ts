@@ -44,8 +44,8 @@ export const refreshAccessToken = async (t: ObsidianGoogleDrive) => {
             method: "POST",
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-                client_id: secretStorage.getSecret('client-id'),
-                client_secret: secretStorage.getSecret('client-secret'),
+                client_id: secretStorage.getSecret('client-id') ?? '',
+                client_secret: secretStorage.getSecret('client-secret') ?? '',
                 refresh_token: t.settings.refreshToken,
                 grant_type: "refresh_token",
             }),
