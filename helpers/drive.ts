@@ -528,10 +528,10 @@ export const getDriveClient = (t: ObsidianGoogleDrive) => {
 
 export const checkConnection = async () => {
 	try {
-		const result = await ky.get("https://ogd.richardxiong.com/api/ping");
-		return result.ok;
+		await fetch("https://1.1.1.1", { method: "HEAD", mode: "no-cors" });
+		return true; // If the fetch succeeds, we have internet!
 	} catch {
-		return false;
+		return false; // If it fails, we are offline or blocked
 	}
 };
 

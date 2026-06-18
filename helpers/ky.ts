@@ -39,15 +39,23 @@ export const getDriveKy = (t: ObsidianGoogleDrive) => {
 
 export const refreshAccessToken = async (t: ObsidianGoogleDrive) => {
 	try {
-		const { expires_in, access_token } = await ky
-			.post("https://ogd.richardxiong.com/api/access", {
-				json: { refresh_token: t.settings.refreshToken },
-			})
-			.json<any>();
+		const secretStorage = t.app.secretStorage
+        const response = await fetch("https://oauth2.googleapis.com/token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                client_id: secretStorage.getSecret('client-id'),
+                client_secret: secretStorage.getSecret('client-secret'),
+                refresh_token: t.settings.refreshToken,
+                grant_type: "refresh_token",
+            }),
+        });
+
+        const data = await response.json();
 
 		t.accessToken = {
-			token: access_token,
-			expiresAt: Date.now() + expires_in * 1000,
+			token: data.access_token,
+			expiresAt: Date.now() + data.expires_in * 1000,
 		};
 		return t.accessToken;
 	} catch (e: any) {

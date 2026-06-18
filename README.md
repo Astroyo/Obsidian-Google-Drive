@@ -2,10 +2,12 @@
 
 This is an unofficial sync plugin for Obsidian, specifically for Google Drive.
 
+This was forked from [https://github.com/richardx366/Obsidian-Google-Drive](https://github.com/richardx366/Obsidian-Google-Drive) because that implementation uses its own API to get a refresh token. If you are not technical, then just use that implementation since you won't need to create your own OAuth 2.0 Client Credentials from your Google Account.
+
 ## Disclaimer
 
 -   This is **not** the [official sync service](https://obsidian.md/sync) provided by Obsidian
--   This plugin communicates with external servers, namely the Google Drive API and [https://ogd.richardxiong.com](https://ogd.richardxiong.com)
+-   This plugin communicates with external servers, ONLY the Google Drive API
     -   The details of this communication are explained at the bottom of the notes section
 
 ## Caution
@@ -51,18 +53,29 @@ This is an unofficial sync plugin for Obsidian, specifically for Google Drive.
 -   Do **NOT** change the Obsidian configuration folder
     -   If you really want to, make a new vault, change the folder, enable the plugin, and copy your files over (you can move the contents of .obsidian to the new folder through file explorer)
 -   This only accesses the Google Drive API to sync files and does not access or store any data outside of the user's device
--   This only accesses [https://ogd.richardxiong.com](https://ogd.richardxiong.com) to convert refresh tokens into access tokens (while hiding the client secret) and to check internet connectivity with a simple ping request
+-   This only accesses [https://1.1.1.1](https://1.1.1.1) to check internet connectivity.
 
 ## Setup
 
-Note: Instructions are also on this plugin's homepage with images at [https://ogd.richardxiong.com](https://ogd.richardxiong.com)
+Part 1: Obtaining the OAuth 2.0 Client Credentials
+You'll need a **Client ID** and **Client Secret** from Google Cloud Console.
+1. Go to [Google Cloud Console's credentials page](https://console.cloud.google.com/apis/credentials)
+   and create an **OAuth 2.0 Client ID** of type **Desktop application**.
+   Refer to [Google's official guide](https://developers.google.com/identity/protocols/oauth2/native-app#create-client-secret)
+   if needed. The UI changes often enough that any fixed steps here would go stale.
+   What you're looking for at the end is an **OAuth client ID** of type **desktop application**.
+2. Get the python script to generate a refresh token from the github repository.
+3. Once you have your Client ID and Client Secret, run the following to generate your refresh token:
+```bash
+python get_refresh_token.py clientID clientSecret
+```
+   Then open `http://localhost` in your browser and follow the Google sign-in flow. Your credentials will be printed in the terminal once complete.
 
-1. Visit this plugin's homepage at [https://ogd.richardxiong.com](https://ogd.richardxiong.com)
-2. Click `Sign In` at the top right and log in with your Google account
-3. Copy the refresh token that appears after logging in
-4. Enable the Google Drive Sync plugin in Obsidian
-5. Paste the refresh token into the plugin settings in Obsidian
-6. Reload the Obsidian app
+Part 2: Setting up the Plugin
+1. Add the Client ID and Client Secret as 'client-id' and 'client-secret' respectively in Obsidian -> Vault Settings -> Keychain (Obsidian API calls it .secretStorage).
+2. Install and enable the Google Drive Sync plugin in Obsidian
+3. Paste the refresh token into the plugin settings in Obsidian
+4. Reload the Obsidian app
 
 ## Use
 
@@ -91,4 +104,3 @@ Note: Instructions are also on this plugin's homepage with images at [https://og
     -   Instead, make a new vault, sync it, and transfer your files over
     -   We will not add any implementation to automate this process because it inherently messes with other synced devices
 
-Privacy Policy: [https://ogd.richardxiong.com/privacy](https://ogd.richardxiong.com/privacy)

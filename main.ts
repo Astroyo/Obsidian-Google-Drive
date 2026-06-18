@@ -319,8 +319,8 @@ class SettingsTab extends PluginSettingTab {
 		containerEl.empty();
 
 		containerEl.createEl("a", {
-			href: "https://ogd.richardxiong.com",
-			text: "Get refresh token",
+			href: "https://github.com/Astroyo/Obsidian-Google-Drive#setup",
+			text: "Get a refresh token",
 		});
 
 		new Setting(containerEl)
